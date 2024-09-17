@@ -221,7 +221,7 @@ namespace blue
 
         iterator end()
         {
-            if (size() == 0)
+            if (empty())
                 return begin(); // return the start if zero so loop instantly ends
             return &data_[size()]; // 1 past the end
         }
