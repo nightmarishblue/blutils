@@ -3,25 +3,6 @@
 
 #include "array.hpp"
 
-template<typename T>
-static constexpr bool same_size(std::initializer_list<std::initializer_list<T>> b)
-{
-    return true;
-    // if (arrays.size() == 0) return true; // no discrepancy if there isnt a single sublist
-    // auto it = arrays.begin();
-    // auto size = it->size();
-    // for (auto end = arrays.end(); it != end; ++it)
-    //     if (it->size() != size) return false;
-    // return true;
-}
-
-template<typename T>
-static std::size_t columns(std::initializer_list<std::initializer_list<T>> arrays)
-{
-    if (arrays.size() == 0) return 0; // must be an empty matrix
-    return arrays.begin()->size();
-}
-
 namespace blue
 {
     static std::size_t rowIndex(std::size_t columns, std::size_t rowIndex)
@@ -47,8 +28,6 @@ namespace blue
         }
     };
 
-    // template<std::size_t R, std::size_t C>
-    // template<class A>
     template<typename T>
     class matrix
     {
@@ -73,11 +52,15 @@ namespace blue
         // i would disallow it, but mathematically there is a matrix with a 0-dimension - the empty matrix
         matrix(size_type rows, size_type columns) : rows_(rows), columns_(columns) , data_(rows * columns) {}
 
-        // matrix(std::initializer_list<std::initializer_list<value_type>> values) : matrix(values.size(), columns(values))
-        // {
-        //     // tomfuckery with initializer_list not just being constexpr :/
-        //     static_assert(same_size(values), "elements of initialiser list are not all of same size");
-        // }
+        template<size_type R, size_type C>
+        matrix(const value_type(&array)[R][C]) : matrix(R, C)
+        {
+            for (size_type i = 0; i < R; i++)
+            {
+                for (size_type j = 0; j < C; j++)
+                    (*this)[i][j] = array[i][j];
+            }
+        }
 
         pointer operator[](size_type index)
         {
@@ -91,6 +74,4 @@ namespace blue
             return data_[normalize(columns_, row, column)];
         }
     };
-
-
 }
