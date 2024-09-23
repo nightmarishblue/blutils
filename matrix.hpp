@@ -49,6 +49,7 @@ namespace blue
     class matrix
     {
     public:
+        using this_type = matrix<T>;
         using value_type = T;
         using size_type = std::size_t;
 
@@ -113,7 +114,7 @@ namespace blue
 
         row operator[](size_type rowIndex)
         {
-            return row(&data_[rowIndex]);
+            return row(&data_[rowIndex], columns_);
         }
     };
 
