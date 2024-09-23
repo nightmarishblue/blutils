@@ -56,6 +56,7 @@ namespace blue
         class row
         {
         public:
+            using this_type = matrix<T>::row;
             using size_type = std::size_t;
 
             using reference = value_type&;
@@ -63,7 +64,12 @@ namespace blue
 
         private:
             value_type* data_;
-            size_type columns_;
+            size_type columns_; // rename to size?
+
+            this_type* strip() const
+            {
+                return const_cast<this_type*>(this);
+            }
 
         public:
             row(value_type* pointer, size_type columns) : data_(pointer), columns_(columns) {}
@@ -71,6 +77,23 @@ namespace blue
             reference operator[](size_type index)
             {
                 return data_[index];
+            }
+
+            const_reference operator[](size_type index) const
+            {
+                return strip()->operator[](index);
+            }
+
+            reference at(size_type index)
+            {
+                if (index >= columns_)
+                    throw std::out_of_range(INDEX_OOB_MSG);
+                return data_[index];
+            }
+
+            const_reference at(size_type index) const
+            {
+                return strip()->at(index);
             }
         };
 
