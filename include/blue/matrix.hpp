@@ -11,24 +11,13 @@ namespace blue
         return rowIndex * columns;
     }
 
-    // with the number of columns in a 2D matrix and the desired row and column, get the index of
+    // with the number of columns in a 2D matrix and the desired row and column, flatten it into a 1D index
     static std::size_t normalize(/* std::size_t rows, (unneeded) */ std::size_t cols, std::size_t row, std::size_t col)
     {
         return rowIndex(cols, row) + col;
     }
 
-    template<typename T>
-    class row
-    {
-    public:
-        using size_type = std::size_t;
-        T* data_;
-        T& operator[](size_type index)
-        {
-            return data_[index];
-        }
-    };
-
+    // fixed-size 2D container with a single block of heap memory
     template<typename T>
     class matrix
     {
@@ -50,9 +39,11 @@ namespace blue
         blue::array<T> data_; // wastes a *teensy* bit of memory with an extra size_t but is a good backing
 
     public:
-        // i would disallow it, but mathematically there is a matrix with a 0-dimension - the empty matrix
+        // construct without initialising
         matrix(size_type rows, size_type columns) : rows_(rows), columns_(columns) , data_(rows * columns) {}
+        // i would disallow it, but mathematically there is a matrix with a 0-dimension - the empty matrix
 
+        // construct with a 2D array
         template<size_type R, size_type C>
         matrix(const value_type(&array)[R][C]) : matrix(R, C)
         {
@@ -74,5 +65,7 @@ namespace blue
                 throw std::out_of_range(INDEX_OOB_MSG);
             return data_[normalize(columns_, row, column)];
         }
+
+        // TODO create const accessors
     };
 }
