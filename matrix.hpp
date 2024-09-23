@@ -57,10 +57,18 @@ namespace blue
         {
         public:
             using size_type = std::size_t;
-            T* data_;
-            size_type columns;
-            // row(T* pointer, size_type columns)
-            T& operator[](size_type index)
+
+            using reference = value_type&;
+            using const_reference = const value_type&;
+
+        private:
+            value_type* data_;
+            size_type columns_;
+
+        public:
+            row(value_type* pointer, size_type columns) : data_(pointer), columns_(columns) {}
+
+            reference operator[](size_type index)
             {
                 return data_[index];
             }
