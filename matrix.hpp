@@ -24,13 +24,17 @@ static std::size_t columns(std::initializer_list<std::initializer_list<T>> array
 
 namespace blue
 {
-    // with the number of columns in a 2D matrix and the desired row and column, get the index of
-    std::size_t normalize(/* std::size_t rows, (unneeded) */ std::size_t cols, std::size_t row, std::size_t col)
+    static std::size_t rowIndex(std::size_t columns, std::size_t rowIndex)
     {
-        return row * cols + col;
+        return rowIndex * columns;
     }
 
-    // dereference row to get something
+    // with the number of columns in a 2D matrix and the desired row and column, get the index of
+    static std::size_t normalize(/* std::size_t rows, (unneeded) */ std::size_t cols, std::size_t row, std::size_t col)
+    {
+        return rowIndex(cols, row) + col;
+    }
+
     template<typename T>
     class row
     {
@@ -53,56 +57,19 @@ namespace blue
         using value_type = T;
         using size_type = std::size_t;
 
-        // using row = blue::row<value_type>;
-        class row
-        {
-        public:
-            using this_type = matrix<T>::row;
-            using size_type = std::size_t;
+        using pointer = value_type*;
+        using const_pointer = const value_type*;
 
-            using reference = value_type&;
-            using const_reference = const value_type&;
+        using reference = value_type&;
+        using const_reference = const value_type&;
 
-        private:
-            value_type* data_;
-            size_type columns_; // rename to size?
-
-            this_type* strip() const
-            {
-                return const_cast<this_type*>(this);
-            }
-
-        public:
-            row(value_type* pointer, size_type columns) : data_(pointer), columns_(columns) {}
-
-            reference operator[](size_type index)
-            {
-                return data_[index];
-            }
-
-            const_reference operator[](size_type index) const
-            {
-                return strip()->operator[](index);
-            }
-
-            reference at(size_type index)
-            {
-                if (index >= columns_)
-                    throw std::out_of_range(INDEX_OOB_MSG);
-                return data_[index];
-            }
-
-            const_reference at(size_type index) const
-            {
-                return strip()->at(index);
-            }
-        };
-
-        // using reference = row; // ?
+    private:
+        static constexpr auto INDEX_OOB_MSG = "blue::matrix: index out of bounds";
 
         size_type rows_, columns_;
         blue::array<T> data_; // wastes a *teensy* bit of memory with an extra size_t but is a good backing
 
+    public:
         // i would disallow it, but mathematically there is a matrix with a 0-dimension - the empty matrix
         matrix(size_type rows, size_type columns) : rows_(rows), columns_(columns) , data_(rows * columns) {}
 
@@ -112,9 +79,16 @@ namespace blue
         //     static_assert(same_size(values), "elements of initialiser list are not all of same size");
         // }
 
-        row operator[](size_type rowIndex)
+        pointer operator[](size_type index)
         {
-            return row(&data_[rowIndex], columns_);
+            return &data_[rowIndex(columns_, index)];
+        }
+
+        reference at(size_type row, size_type column)
+        {
+            if (row >= rows_ || column >= columns_)
+                throw std::out_of_range(INDEX_OOB_MSG);
+            return data_[normalize(columns_, row, column)];
         }
     };
 
