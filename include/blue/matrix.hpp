@@ -36,14 +36,19 @@ namespace blue
         static constexpr auto INDEX_OOB_MSG = "blue::matrix: index out of bounds";
 
         size_type rows_, columns_;
-        blue::array<T> data_; // wastes a *teensy* bit of memory with an extra size_t but is a good backing
+        blue::array<value_type> data_; // wastes a *teensy* bit of memory with an extra size_t but is a good backing
+
+        this_type* strip() const
+        {
+            return const_cast<this_type*>(this);
+        }
 
     public:
         // construct without initialising
         matrix(size_type rows, size_type columns) : rows_(rows), columns_(columns) , data_(rows * columns) {}
         // i would disallow it, but mathematically there is a matrix with a 0-dimension - the empty matrix
 
-        // construct with a 2D array
+        // construct with the elements of a 2D array
         template<size_type R, size_type C>
         matrix(const value_type(&array)[R][C]) : matrix(R, C)
         {
@@ -59,6 +64,11 @@ namespace blue
             return &data_[rowIndex(columns_, index)];
         }
 
+        const_pointer operator[](size_type index) const
+        {
+            return strip()->operator[](index);
+        }
+
         reference at(size_type row, size_type column)
         {
             if (row >= rows_ || column >= columns_)
@@ -66,6 +76,9 @@ namespace blue
             return data_[normalize(columns_, row, column)];
         }
 
-        // TODO create const accessors
+        const_reference at(size_type row, size_type column) const
+        {
+            return strip()->at(row, column);
+        }
     };
 }
