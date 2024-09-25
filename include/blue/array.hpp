@@ -271,12 +271,13 @@ namespace blue
         return !(lhs == rhs);
     }
 
-    // would add lexicographical comparison here if i ever used it
+    // TODO implement <, <=, >, >= for lexicographical comparison
 }
 
 namespace std
 {
     // allow tuple-like usage - maybe not appropriate since the length is dynamic
+    // TODO decide whether to keep this
 
     template<std::size_t I, typename T>
     T& get(blue::array<T>& a) noexcept

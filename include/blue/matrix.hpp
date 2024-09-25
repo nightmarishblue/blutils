@@ -80,5 +80,8 @@ namespace blue
         {
             return strip()->at(row, column);
         }
+
+        // TODO missing iterators, size accessors, etc
+        // what is the size of a matrix? i think we may need accessors for row and colum size
     };
 }
