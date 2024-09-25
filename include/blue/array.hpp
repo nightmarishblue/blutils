@@ -25,7 +25,7 @@ namespace blue
         using const_reverse_iterator = std::reverse_iterator<const_iterator>;
 
     private:
-        T* data_;
+        T* data_ = nullptr;
         /*const*/ size_type length_;
 
         self_type* strip() const
