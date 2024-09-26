@@ -1,5 +1,8 @@
 #pragma once
+#include <algorithm>
+#include <functional>
 #include <stdexcept>
+
 namespace blue
 {
     // contiguous array of dynamic, but unchanging size
@@ -271,7 +274,29 @@ namespace blue
         return !(lhs == rhs);
     }
 
-    // TODO implement <, <=, >, >= for lexicographical comparison
+    template<typename T>
+    bool operator<(const blue::array<T>& lhs, const blue::array<T>& rhs)
+    {
+        return std::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
+    }
+
+    template<typename T>
+    bool operator<=(const blue::array<T>& lhs, const blue::array<T>& rhs)
+    {
+        return std::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end(), std::less_equal<T>{});
+    }
+
+    template<typename T>
+    bool operator>(const blue::array<T>& lhs, const blue::array<T>& rhs)
+    {
+        return !(lhs <= rhs);
+    }
+
+    template<typename T>
+    bool operator>=(const blue::array<T>& lhs, const blue::array<T>& rhs)
+    {
+        return !(lhs < rhs);
+    }
 }
 
 namespace std
