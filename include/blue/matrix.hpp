@@ -81,7 +81,22 @@ namespace blue
             return strip()->at(row, column);
         }
 
-        // TODO missing iterators, size accessors, etc
-        // what is the size of a matrix? i think we may need accessors for row and colum size
+        size_type rows() const
+        {
+            return rows_;
+        }
+
+        size_type columns() const
+        {
+            return columns_;
+        }
+
+        size_type size() const
+        {
+            // the size of a Container is how many things it's storing total
+            return data_.size();
+        }
+
+        // TODO add iterators
     };
 }
