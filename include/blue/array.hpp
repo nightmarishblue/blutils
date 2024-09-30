@@ -83,11 +83,11 @@ namespace blue
         {
             if (length_ != other.length_)
             {
+                length_ = other.length_;
                 delete[] data_;
-                data_ = new value_type[other.length_];
+                data_ = new value_type[length_];
             }
 
-            length_ = other.length_;
             size_type i = 0;
             for (const auto& element : other)
                 data_[i++] = element;
