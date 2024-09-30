@@ -23,20 +23,28 @@ namespace blue
     {
     public:
         using this_type = matrix<T>;
-        using value_type = T;
-        using size_type = std::size_t;
+        using array_type = blue::array<T>;
 
-        using pointer = value_type*;
-        using const_pointer = const value_type*;
+        using value_type = typename array_type::value_type;
+        using size_type = typename array_type::size_type;
 
-        using reference = value_type&;
-        using const_reference = const value_type&;
+        using pointer = typename array_type::pointer;
+        using const_pointer = typename array_type::const_pointer;
+
+        using reference = typename array_type::reference;
+        using const_reference = typename array_type::const_reference;
+
+        using iterator = typename array_type::iterator;
+        using const_iterator = typename array_type::const_iterator;
+
+        using reverse_iterator = typename array_type::reverse_iterator;
+        using const_reverse_iterator = typename array_type::const_reverse_iterator;
 
     private:
         static constexpr auto INDEX_OOB_MSG = "blue::matrix: index out of bounds";
 
         size_type rows_, columns_;
-        blue::array<value_type> data_; // wastes a *teensy* bit of memory with an extra size_t but is a good backing
+        array_type data_; // wastes a *teensy* bit of memory with an extra size_t but is a good backing
 
         this_type* strip() const
         {
