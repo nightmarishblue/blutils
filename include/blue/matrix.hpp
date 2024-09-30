@@ -106,5 +106,24 @@ namespace blue
         }
 
         // TODO add iterators
+        iterator begin()
+        {
+            return data_.begin();
+        }
+
+        const_iterator begin() const
+        {
+            return strip()->begin();
+        }
+
+        iterator end()
+        {
+            return data_.end();
+        }
+
+        const_iterator end() const
+        {
+            return strip()->end();
+        }
     };
 }
